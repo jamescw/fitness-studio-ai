@@ -37,9 +37,11 @@ When a lead books a call via Calendly, this system:
 
 ---
 
-## Step 1 — Install these skills in Claude Code
+## Step 1 — Install via the Claude Code Marketplace
 
-Add this to your `~/.claude/settings.json`:
+**1a. Register this marketplace (one-time)**
+
+Open `~/.claude/settings.json` and add:
 
 ```json
 {
@@ -50,14 +52,19 @@ Add this to your `~/.claude/settings.json`:
         "repo": "jamescw/fitness-studio-ai"
       }
     }
-  },
-  "enabledPlugins": {
-    "fitness-studio@fitness-studio-ai": true
   }
 }
 ```
 
-Then restart Claude Code.
+**1b. Install the plugin through the UI**
+
+1. Open Claude Code
+2. Type `/plugins` to open the plugin marketplace
+3. Find **fitness-studio-ai** in the marketplace list
+4. Click **Enable** next to the `fitness-studio` plugin
+5. Restart Claude Code
+
+The 5 skills will now be available in every conversation.
 
 ---
 
