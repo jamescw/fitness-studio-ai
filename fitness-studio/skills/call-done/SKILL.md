@@ -35,7 +35,7 @@ Write a personalised email to the lead. The email must:
 - Open with their name and reference something specific from the call (use the notes)
 - Be warm, human and enthusiastic — not templated or salesy
 - Briefly remind them why they said they were interested
-- Include the membership link: **ask the user for this if you don't have it**, or use the default link if one is configured
+- Include the membership link: ${user_config.membership_link}
 - Be concise — no more than 150 words
 - Subject line should feel personal, not generic (avoid "Following up on our call")
 
@@ -43,7 +43,15 @@ Do NOT use placeholder text. If you don't have enough context to personalise, as
 
 ## Step 5 — Send via Outlook
 
-Send the email using the Microsoft 365 / Outlook integration. The From address should be the studio's configured email.
+POST the email to the Zapier webhook at ${user_config.zapier_email_webhook} with this JSON body:
+```json
+{
+  "to": "<lead email>",
+  "from": "${user_config.studio_email}",
+  "subject": "<subject>",
+  "body": "<email body>"
+}
+```
 
 ## Step 6 — Update Notion
 

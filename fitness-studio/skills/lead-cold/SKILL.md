@@ -24,7 +24,15 @@ Write a brief, warm, zero-pressure final email:
 - Under 80 words
 - Subject: keep it light, e.g. "No worries at all" or similar
 
-Send via Outlook.
+POST to the Zapier webhook at ${user_config.zapier_email_webhook}:
+```json
+{
+  "to": "<lead email>",
+  "from": "${user_config.studio_email}",
+  "subject": "<subject>",
+  "body": "<email body>"
+}
+```
 
 ## Step 3 — Confirm
 

@@ -8,5 +8,27 @@
   },
   "repository": "https://github.com/jamescw/fitness-studio-ai",
   "license": "MIT",
-  "keywords": ["fitness", "crm", "lead-nurturing", "notion", "calendly", "stripe"]
+  "keywords": ["fitness", "crm", "lead-nurturing", "notion", "calendly", "stripe"],
+  "userConfig": {
+    "notion_token": {
+      "description": "Your Notion API token — get it from notion.so/my-integrations (starts with secret_...)",
+      "sensitive": true
+    },
+    "notion_database_id": {
+      "description": "Your Leads CRM database ID — copy from the Notion URL after your workspace name",
+      "sensitive": false
+    },
+    "membership_link": {
+      "description": "The link you send leads to sign up (e.g. https://yourstudio.com/join)",
+      "sensitive": false
+    },
+    "studio_email": {
+      "description": "The email address to send from (e.g. hello@mystudio.com)",
+      "sensitive": false
+    },
+    "zapier_email_webhook": {
+      "description": "Your Zapier webhook URL for sending emails via Outlook (from Zap 3 in setup)",
+      "sensitive": false
+    }
+  }
 }

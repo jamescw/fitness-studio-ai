@@ -24,11 +24,9 @@ When a lead books a call via Calendly, this system:
 
 ---
 
-## Setup
+## What you need before starting
 
-### What you need before starting
-
-- Claude Code installed
+- Claude Code (CLI or Desktop app)
 - A Notion account (free tier works)
 - A Zapier account (Starter plan or above for multi-step zaps)
 - Microsoft 365 / Outlook (for sending emails)
@@ -37,11 +35,22 @@ When a lead books a call via Calendly, this system:
 
 ---
 
-## Step 1 — Install via the Claude Code Marketplace
+## Installation
 
-**1a. Register this marketplace (one-time)**
+### Option A — Claude Code Desktop App
 
-Open `~/.claude/settings.json` and add:
+1. Open the Claude Code Desktop app
+2. Go to **Settings → Integrations → Notion** and connect your Notion account
+3. Go to **Extensions / Plugins → Add Marketplace**
+4. Enter this repository URL: `https://github.com/jamescw/fitness-studio-ai`
+5. Find **fitness-studio** in the list and click **Install**
+6. Claude will prompt you for your configuration values — enter each one when asked
+
+### Option B — Claude Code CLI
+
+**Step 1 — Register this marketplace (one-time)**
+
+Add to `~/.claude/settings.json`:
 
 ```json
 {
@@ -56,25 +65,40 @@ Open `~/.claude/settings.json` and add:
 }
 ```
 
-**1b. Install with a single command**
+**Step 2 — Connect Notion**
+
+In Claude Code, run:
+```
+/mcp add notion
+```
+Or go to **Settings → MCP Servers** and enable the built-in Notion connector.
+
+**Step 3 — Install the plugin**
 
 ```bash
 claude plugin install fitness-studio@fitness-studio-ai
 ```
 
-Or install through the UI: open Claude Code → type `/plugins` → find **fitness-studio-ai** → click **Enable**.
-
-The 5 skills will now be available in every conversation.
+Claude will prompt you for your configuration values — enter each one when asked.
 
 **To update later:**
-
 ```bash
 claude plugin update fitness-studio@fitness-studio-ai
 ```
 
+### Configuration values you'll be prompted for
+
+| Value | Where to find it |
+|-------|-----------------|
+| Notion API token | [notion.so/my-integrations](https://notion.so/my-integrations) → New integration → copy the `secret_...` token |
+| Notion database ID | Open your Leads CRM in Notion → copy the ID from the URL |
+| Membership link | The URL you send leads to sign up |
+| Studio email | The From address for emails (e.g. `hello@mystudio.com`) |
+| Zapier email webhook | Created in Step 3 of Zapier setup below |
+
 ---
 
-## Step 2 — Set up the Notion CRM database
+## Step 1 — Set up the Notion CRM database
 
 1. Go to [notion.so](https://notion.so) and create a new database called **Leads CRM**
 2. Add the following properties (exact names matter):
@@ -96,38 +120,23 @@ claude plugin update fitness-studio@fitness-studio-ai
 | Notes | Text |
 | Assigned to | Person |
 
-3. Copy the database ID from the URL: `notion.so/YOUR-WORKSPACE/`**`this-part-is-the-database-id`**`?v=...`
+3. Copy the database ID from the URL:
+   `notion.so/YOUR-WORKSPACE/`**`this-part-is-the-database-id`**`?v=...`
 
-### Get a Notion API key
-
-1. Go to [notion.so/my-integrations](https://notion.so/my-integrations)
-2. Click **New integration**
-3. Name it "Claude CRM", select your workspace, click Submit
-4. Copy the **Internal Integration Token** (starts with `secret_...`)
-5. Back in your Leads CRM database, click the `...` menu → **Add connections** → select your integration
+4. Connect your integration: click `...` menu → **Add connections** → select your integration
 
 ---
 
-## Step 3 — Set up Zapier
-
-### Get your Zapier API key (for Claude Code MCP)
-
-1. Go to [zapier.com/app/developer](https://zapier.com/app/developer)
-2. Click your profile → **Developer Platform**
-3. Under **API Keys**, create a new key
-4. Copy it — you'll use this when setting up the Zapier MCP server in Claude Code
+## Step 2 — Set up Zapier
 
 ### Zap 1 — Calendly → Notion (new lead intake)
 
 1. In Zapier, click **Create Zap**
 2. **Trigger:** Calendly → *Invitee Created*
-   - Connect your Calendly account
-   - Select the event type used for sales calls
+   - Connect your Calendly account and select your sales call event type
 3. **Action 1:** Notion → *Find Database Item*
-   - Connect your Notion account
-   - Database: Leads CRM
-   - Search field: Email → map from Calendly email
-4. **Action 2:** Add a Filter — only continue if item was NOT found (avoid duplicates)
+   - Database: Leads CRM · Search field: Email
+4. **Action 2:** Filter — only continue if item was NOT found (avoids duplicates)
 5. **Action 3:** Notion → *Create Database Item*
    - Name → Calendly: Invitee Name
    - Email → Calendly: Invitee Email
@@ -139,62 +148,26 @@ claude plugin update fitness-studio@fitness-studio-ai
 ### Zap 2 — Stripe → Notion (lead converted)
 
 1. **Trigger:** Stripe → *Payment Intent Succeeded*
-   - Connect your Stripe account
-2. **Action 1:** Notion → *Find Database Item*
-   - Database: Leads CRM
-   - Search field: Email → map from Stripe customer email
+2. **Action 1:** Notion → *Find Database Item* by email
 3. **Action 2:** Notion → *Update Database Item*
    - Status → `converted`
    - Converted date → today
 
----
+### Zap 3 — Webhook → Outlook (email sender)
 
-## Step 4 — Connect Notion MCP to Claude Code
-
-Add this to your `~/.claude/settings.json` under `mcpServers`:
-
-```json
-"mcpServers": {
-  "notion": {
-    "type": "http",
-    "url": "https://mcp.notion.com/sse",
-    "headers": {
-      "Authorization": "Bearer YOUR_NOTION_TOKEN"
-    }
-  }
-}
-```
-
-Replace `YOUR_NOTION_TOKEN` with the `secret_...` key from Step 2.
-
----
-
-## Step 5 — Connect Outlook / Microsoft 365
-
-Use Zapier to send emails (simplest option):
-
-1. In Zapier, create a **Zap** triggered by a **Webhook** (catch hook)
-2. Action: Microsoft 365 → *Send Email*
-   - Map: To, Subject, Body from webhook payload
-3. Copy the webhook URL — you'll give this to Claude as the "send email endpoint"
-
-Or, if your organisation allows it, use the [Microsoft Graph MCP server](https://github.com/microsoft/graph-mcp) for direct Outlook access.
-
----
-
-## Step 6 — Tell Claude your configuration
-
-On first use, tell Claude:
-
-> "My Notion Leads CRM database ID is `xxxxx`. My membership link is `https://...`. Emails should be sent from `hello@mystudio.com`."
-
-Claude will remember this for the session. For permanent config, you can add these to a `CLAUDE.md` file in your project.
+1. **Trigger:** Webhooks by Zapier → *Catch Hook*
+2. Copy the webhook URL — this is your **Zapier email webhook** value for the plugin config
+3. **Action:** Microsoft 365 → *Send Email*
+   - To → webhook payload: `to`
+   - From → webhook payload: `from`
+   - Subject → webhook payload: `subject`
+   - Body → webhook payload: `body`
 
 ---
 
 ## Scheduling daily follow-ups
 
-To run `lead-followup` automatically every morning, ask Claude:
+To run `lead-followup` automatically every morning, tell Claude:
 
 > "Set up a daily schedule to run lead follow-ups at 9am"
 
@@ -206,13 +179,12 @@ Claude Code will create a cron schedule for you.
 
 **Leads not appearing after Calendly booking**
 - Check the Zap is turned on in Zapier
-- Check the Calendly event type matches the trigger
-- Verify the Notion integration has access to the database
+- Verify the Notion integration has access to the Leads CRM database
 
 **Emails not sending**
-- Check the Outlook Zapier connection is still authenticated (tokens expire)
-- Verify the webhook URL is correct
+- Check the Outlook connection in Zapier hasn't expired (reconnect if needed)
+- Verify the webhook URL matches what's in your plugin config
 
 **Claude can't find a lead**
-- Make sure the Notion MCP is connected and the database ID is correct
-- Check the lead's name spelling matches exactly
+- Make sure Notion is connected (Desktop: Settings → Integrations, CLI: `/mcp`)
+- Check the lead's name spelling matches the Notion record

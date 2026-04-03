@@ -41,7 +41,16 @@ For each lead due a follow-up, write an email that:
 
 ## Step 4 — Send each email via Outlook
 
-Send each email individually. Do not batch or CC multiple leads.
+POST each email to the Zapier webhook at ${user_config.zapier_email_webhook}:
+```json
+{
+  "to": "<lead email>",
+  "from": "${user_config.studio_email}",
+  "subject": "<subject>",
+  "body": "<email body>"
+}
+```
+Send each lead individually. Do not batch or CC multiple leads.
 
 ## Step 5 — Update Notion for each lead
 

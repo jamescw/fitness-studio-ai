@@ -33,7 +33,15 @@ Write a warm, personal welcome email that:
 - Feels like it's from a person, not an automated system
 - Is concise — under 100 words
 
-Send via Outlook.
+POST to the Zapier webhook at ${user_config.zapier_email_webhook}:
+```json
+{
+  "to": "<lead email>",
+  "from": "${user_config.studio_email}",
+  "subject": "Welcome to the studio!",
+  "body": "<email body>"
+}
+```
 
 ## Step 4 — Confirm
 
