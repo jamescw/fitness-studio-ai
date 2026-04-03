@@ -56,15 +56,21 @@ Open `~/.claude/settings.json` and add:
 }
 ```
 
-**1b. Install the plugin through the UI**
+**1b. Install with a single command**
 
-1. Open Claude Code
-2. Type `/plugins` to open the plugin marketplace
-3. Find **fitness-studio-ai** in the marketplace list
-4. Click **Enable** next to the `fitness-studio` plugin
-5. Restart Claude Code
+```bash
+claude plugin install fitness-studio@fitness-studio-ai
+```
+
+Or install through the UI: open Claude Code → type `/plugins` → find **fitness-studio-ai** → click **Enable**.
 
 The 5 skills will now be available in every conversation.
+
+**To update later:**
+
+```bash
+claude plugin update fitness-studio@fitness-studio-ai
+```
 
 ---
 

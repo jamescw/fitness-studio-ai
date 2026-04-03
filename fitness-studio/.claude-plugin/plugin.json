@@ -1,0 +1,12 @@
+{
+  "name": "fitness-studio",
+  "version": "1.0.0",
+  "description": "Lead nurturing and CRM automation for fitness studios. Connects Calendly, Notion, Stripe and Outlook into an automated pipeline.",
+  "author": {
+    "name": "jamescw",
+    "url": "https://github.com/jamescw"
+  },
+  "repository": "https://github.com/jamescw/fitness-studio-ai",
+  "license": "MIT",
+  "keywords": ["fitness", "crm", "lead-nurturing", "notion", "calendly", "stripe"]
+}
