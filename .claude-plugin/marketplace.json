@@ -1,0 +1,14 @@
+{
+  "name": "fitness-studio-ai",
+  "owner": {
+    "name": "jamescw",
+    "url": "https://github.com/jamescw"
+  },
+  "plugins": [
+    {
+      "name": "fitness-studio",
+      "source": "./fitness-studio",
+      "description": "Lead nurturing and CRM automation for fitness studios. Connects Calendly, Notion, Stripe and Outlook into an automated pipeline."
+    }
+  ]
+}
